@@ -1,0 +1,782 @@
+/* styles.css */
+/* 基础样式 */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0d0d0d;
+  color: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* styles.css 新增/修改样式 */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0d0d0d;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 1.5s ease;
+  /* 添加平滑过渡 */
+}
+
+.spinner-container {
+  /* text-align: center;
+  animation: fadeIn 1s ease-in; */
+
+  opacity: 0;
+  /* 交由GSAP控制 */
+  visibility: hidden;
+
+}
+
+.welcome-text {
+  font-size: 10rem;
+  color: #ffd700;
+  margin-bottom: 10rem;
+  opacity: 0;
+  animation: textFadeIn 1.5s ease forwards;
+  transform: perspective(800px) rotateX(10deg);
+  /* 添加3D效果 */
+  transform-origin: top center;
+}
+
+.spinner {
+  display: inline-flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.dot {
+  width: 15px;
+  height: 15px;
+  background: #ffd700;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: bounce 1.8s infinite ease-in-out;
+}
+
+/* 动画延迟 */
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+  animation-name: bounceLeft;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+  animation-name: bounceCenter;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0s;
+  animation-name: bounceRight;
+}
+
+/* 关键帧动画优化 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes textFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceLeft {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes bounceCenter {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.4);
+  }
+}
+
+@keyframes bounceRight {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.2);
+  }
+}
+
+.spinner {
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 15px;
+  height: 15px;
+  background: #ffd700;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.0);
+  }
+}
+
+/* styles.css 新增粒子样式 */
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: rgba(13, 13, 13, 0.5);
+}
+
+.scroll-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+/* 导航栏 _____________________________________________________________________________________________________________________*/
+.navbar {
+  position: fixed;
+  width: 100%;
+  background: rgba(13, 13, 13, 0.9);
+  padding: 0.7rem 2rem;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  font-family: '微软雅黑'
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-link {
+  color: #f5f5f5;
+  text-decoration: none;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #ffd700;
+}
+
+/* 视差滚动 */
+/* 1.css 修改scroll-container样式 */
+.scroll-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  /* + scroll-snap-type: none; */
+}
+
+
+
+.page-section {
+  scroll-snap-align: start;
+  padding: 5rem 2rem;
+  min-height: 100vh;
+  position: relative;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  opacity: 0.8;
+}
+
+.page-section.active {
+  opacity: 1;
+  transform: translateY(-20px);
+}
+
+/* 1.css 新增视差优化 */
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-container {
+    scroll-behavior: smooth;
+  }
+
+  .page-section {
+    animation: scrollFade 1s ease-out forwards;
+  }
+}
+
+@keyframes scrollFade {
+  from {
+    opacity: 0.7;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 添加滚动指示器动画 */
+.scroll-indicator {
+  animation: bounceIn 2s infinite;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* 首页区域 */
+.hero {
+  background: url('hero-bg.jpg') no-repeat center/cover fixed;
+  animation: pulse 15s infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.title {
+  font-size: 2rem;
+  color: #ffd700;
+  margin-bottom: 2rem;
+}
+
+/* 教育 ——————————————————————————————————————————————————————————————————————————————————————————————————————*/
+
+/* 教育经历时间轴样式 */
+.timeline {
+  position: relative;
+  margin: 4rem auto;
+  max-width: 900px;
+  padding: 0 20px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 500px;
+  /* 与dot居中对齐 */
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700 0%, #ff6ec4 100%);
+  z-index: 0;
+}
+
+.timeline::after {
+  content: '';
+  position: absolute;
+  left: 490px;
+  top: -18px;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 18px solid #ffd700;
+  z-index: 1;
+  filter: drop-shadow(0 2px 6px #ffd70088);
+}
+
+.timeline-card::after {
+  content: '';
+  position: absolute;
+  left: -120px;
+  /* 与箭头对齐 */
+  top: 42px;
+  /* 箭头下方10px */
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(to bottom, #ffd700 0%, transparent 100%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.timeline-card:hover::after {
+  opacity: 1;
+}
+
+@keyframes fadeLine {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+
+  50% {
+    opacity: 0.6;
+    height: 20px;
+  }
+
+  100% {
+    opacity: 0;
+    height: 0;
+  }
+}
+
+.timeline-card:hover::after {
+  opacity: 1;
+  animation: fadeLine 1.5s infinite;
+}
+
+.timeline-card::before {
+  z-index: 3;
+  /* 箭头在竖线上方 */
+}
+
+/* 时间节点圆点 */
+.timeline-dot {
+  position: absolute;
+  top: 14%;
+  left: 450px;
+  /* 移除默认左侧定位 */
+  right: -12px;
+  /* 改为右侧对齐 */
+  width: 16px;
+  height: 16px;
+  background: #ffd700;
+  border-radius: 50%;
+  transform: translateY(-50%, -50%);
+  box-shadow: 0 0 10px #ffd700, 0 0 0 4px #fffbe6aa;
+  z-index: 2;
+  border: 3px solid #fff;
+}
+
+/* 卡片统一靠右 */
+.timeline-item {
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  margin-bottom: 3.5rem;
+  clear: both;
+  z-index: 1;
+}
+
+/* 卡片悬停发光并向左靠近时间轴 */
+.timeline-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  border-left: 4px solid #ffd700;
+  box-shadow: 0 4px 24px 0 rgba(255, 215, 0, 0.10);
+  margin-left: 0;
+  margin-right: auto;
+  min-width: 220px;
+  max-width: 340px;
+  z-index: 2;
+  transition:
+    transform 0.3s cubic-bezier(.68, -0.55, .27, 1.55),
+    box-shadow 0.3s,
+    background 0.3s;
+}
+
+.timeline-card:hover {
+  box-shadow: 0 0 32px 8px #ffd70099, 0 8px 32px 0 rgba(255, 215, 0, 0.18);
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(-32px) scale(1.03);
+  box-shadow: 0 0 32px 8px #ffd70099, 0 8px 32px 0 rgba(255, 215, 0, 0.18);
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(-60px) scale(1.03);
+  /* 调整 X 轴移动量 */
+  transform: translateX(-60px) scale(1.03) !important;
+  /* 强制覆盖 */
+  will-change: transform;
+  /* 告诉浏览器此属性会变化 */
+}
+
+/* 保证卡片不会超出左侧主线 */
+.timeline-card {
+  will-change: transform, box-shadow;
+}
+
+/* 卡片左侧箭头 */
+.timeline-card::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 420px;
+  /* 改为左侧定位 */
+  right: auto;
+  /* 移除右侧定位 */
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 14px solid rgba(255, 255, 255, 0.13);
+  /* 改为右侧箭头 */
+  filter: drop-shadow(-2px 0 2px #ffd70088);
+  /* 阴影方向同步 */
+  z-index: 3;
+  transition: transform 0.3s ease;
+}
+
+/* test.css 新增 */
+.timeline-wrapper {
+  position: relative;
+  z-index: 1;
+  /* 避免层级问题 */
+}
+
+.timeline-card:hover::before {
+  transform: rotate(180deg);
+  /* 悬停时箭头旋转，指向时间轴 */
+  box-shadow: -4px 0 8px #ffd70088 !important;
+  /* 动态阴影 */
+}
+
+/* 卡片内容美化 */
+.timeline-date {
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 0.5em;
+  font-size: 1.15em;
+  letter-spacing: 1px;
+}
+
+.timeline-card h3 {
+  margin: 0 0 0.3em 0;
+  font-size: 1.25em;
+  color: #fff;
+}
+
+.timeline-card p {
+  margin: 0 0 1em 0;
+  color: #eee;
+  font-size: 1em;
+}
+
+.timeline-btn {
+  display: inline-block;
+  padding: 0.4em 1.2em;
+  background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+  color: #222;
+  border-radius: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.98em;
+  box-shadow: 0 2px 8px #ffd70033;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.timeline-btn:hover {
+  background: linear-gradient(90deg, #fffbe6 60%, #ffd700 100%);
+  color: #b48800;
+  transform: scale(1.08);
+}
+
+/* 响应式优化 */
+@media (max-width: 700px) {
+  .timeline {
+    padding-left: 18px;
+  }
+
+  .timeline-card {
+    min-width: 0;
+    max-width: 98vw;
+    padding: 1rem 1rem;
+  }
+
+  .timeline-dot {
+    left: -8px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .timeline-card::before {
+    left: -14px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 10px solid rgba(255, 255, 255, 0.13);
+  }
+
+}
+
+@media (max-width: 768px) {
+  .timeline {
+    margin: 4rem 0;
+    /* 移除右对齐，移动端恢复居中 */
+    padding: 0 18px;
+  }
+
+  .timeline-card:hover {
+    transform: translateX(32px) scale(1.03);
+    /* 缩短位移 */
+  }
+
+  .timeline-card::before {
+    right: -14px;
+    border-left: 10px solid rgba(255, 255, 255, 0.13);
+  }
+
+  .timeline-card::after {
+    left: -14px;
+    /* 移动端微调位置 */
+    top: 38px;
+    height: 16px;
+  }
+}
+
+/* 技能展示 --------------------------------------------------------------------------------------------------*/
+/* .skills {
+  background: rgba(255, 255, 255,0.05);
+} */
+
+.skill-grid {
+  display: flex;
+  justify-content: center;   /* 居中 */
+  align-items: flex-start;
+  gap: 36px;                 /* 卡片间距 */
+  flex-wrap: wrap;
+  margin-bottom: 90px;
+}
+
+
+.skill-card {
+  background: rgba(255,255,255,0.13);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px 0 rgba(255,215,0,0.10);
+  padding: 1.5rem 2rem;
+  width: 220px;              /* 固定宽度，保证等宽 */
+  min-width: 1200px;
+  max-width: 2200px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.skill-card, .skill-card * {
+  text-decoration: none !important;
+}
+.skill-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+}
+@media (max-width: 700px) {
+  .skill-grid {
+    gap: 14px;
+    justify-content: center;
+  }
+  .skill-card {
+    padding: 1rem 0.5rem;
+    min-width: 120px;
+    max-width: 98vw;
+    font-size: 0.95em;
+  }
+}
+/* 项目展示 __________________________________________________________________________________________________________________________*/
+.project-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+}
+
+.project-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* 联系方式________________________________________________________________________________________________________________________________ */
+.contact-info {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.contact-info i {
+  margin-right: 0.5rem;
+  color: #ffd700;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .welcome-text {
+    font-size: 6vw;
+    /* 改用视口单位 */
+    margin-bottom: 5rem;
+    transform: perspective(400px) rotateX(15deg);
+    /* 增强3D效果 */
+  }
+
+
+  .spinner {
+    gap: 6px;
+    /* 缩小点间距 */
+  }
+
+  .dot {
+    width: 10px;
+    /* 减小点尺寸 */
+    height: 10px;
+  }
+}
+
+@keyframes mobileFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1.05);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.spinner-container {
+  animation: mobileFadeIn 1.8s ease-out forwards;
+  /* 替换原动画 */
+  will-change: transform, opacity;
+  /* 提升渲染性能 */
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .spinner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .welcome-text {
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .dot:nth-child(1) {
+    animation-delay: -0.48s;
+  }
+
+  .dot:nth-child(2) {
+    animation-delay: -0.32s;
+  }
+
+  .dot:nth-child(3) {
+    animation-delay: -0.16s;
+  }
+}
+
+/* 添加到1.css底部 */
+.timeline-card {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
