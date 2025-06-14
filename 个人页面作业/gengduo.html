@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更多</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #0ea5e9;
+            --accent: #f97316;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            padding: 30px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero 区域 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            background: linear-gradient(to right, #f97316, #e11d48);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* 项目部分 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+            padding-top: 100px;
+        }
+
+        .section-title h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 20px auto 0;
+            font-size: 1.2rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 100px;
+        }
+
+        .project-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            height: 400px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .project-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .project-card:hover .project-img img {
+            transform: scale(1.1);
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .project-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .project-content p {
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .project-tag {
+            background: rgba(79, 70, 229, 0.2);
+            color: #818cf8;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .project-link:hover {
+            gap: 12px;
+            color: #fdba74;
+        }
+
+        /* 时间轴部分 */
+        .timeline-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 20px 40px;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+            padding-right: 80px;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 80px;
+        }
+
+        .timeline-content {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .timeline-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .timeline-content p {
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        .timeline-date {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-date {
+            right: -90px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-date {
+            left: -90px;
+        }
+
+        /* 页脚 */
+        footer {
+            background: #0f172a;
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-content h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-content p {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* 背景装饰元素 */
+        .bg-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.2;
+        }
+
+        .bg-element-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: 10%;
+            left: 5%;
+        }
+
+        .bg-element-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            bottom: 15%;
+            right: 10%;
+        }
+
+        .bg-element-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            top: 40%;
+            right: 20%;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+                text-align: left;
+            }
+
+            .timeline-item:nth-child(odd) {
+                text-align: left;
+                padding-right: 25px;
+                padding-left: 70px;
+                left: 0;
+            }
+
+            .timeline-item:nth-child(even) {
+                left: 0;
+                padding-left: 70px;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-date,
+            .timeline-item:nth-child(even) .timeline-date {
+                left: 0;
+                right: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .section-title h2 {
+                font-size: 2.8rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 背景装饰元素 -->
+    <div class="bg-elements">
+        <div class="bg-element bg-element-1"></div>
+        <div class="bg-element bg-element-2"></div>
+        <div class="bg-element bg-element-3"></div>
+    </div>
+
+    <!-- 头部导航 -->
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <i class="fas fa-code"></i>
+                详细介绍
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#projects">项目</a></li>
+                    <li><a href="#timeline">历程</a></li>
+                    <li><a href="#contact">联系</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero 区域 -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>向下探索我的生活</h1>
+            <p></p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn btn-primary">我的项目</a>
+                <a href="#timeline" class="btn btn-primary">大学历程</a>
+                <a href="#contact" class="btn btn-primary">联系我</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目展示部分 -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="section-title">
+                <h2>精选项目</h2>
+                <p>每个项目都经过精心设计和开发，融合创新理念与实用功能</p>
+            </div>
+
+           <div class="projects-grid">
+    <!-- 项目卡片 1: 学习官网制作 -->
+    <div class="project-card">
+        <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+                alt="学院官网制作">
+        </div>
+        <div class="project-content">
+            <h3>学院官网制作</h3>
+            <p>开发响应式学院官网，整合信息展示与互动功能，实现多设备兼容</p>
+            <div class="project-tags">
+                <span class="project-tag">HTML5</span>
+                <span class="project-tag">CSS3</span>
+                <span class="project-tag">JavaScript</span>
+                <span class="project-tag">响应式设计</span>
+            </div>
+            <a href="https://github.com/" class="project-link">GitHub查看 <i class="fab fa-github"></i></a>
+        </div>
+    </div>
+
+    <!-- 项目卡片 2: AI聊天机器人制作 -->
+    <div class="project-card">
+        <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+                alt="AI聊天机器人">
+        </div>
+        <div class="project-content">
+            <h3>AI聊天机器人</h3>
+            <p>基于自然语言处理的智能助手，实现个性化问答与信息查询功能</p>
+            <div class="project-tags">
+                <span class="project-tag">JavaScript</span>
+                <span class="project-tag">API集成</span>
+                <span class="project-tag">自然语言处理</span>
+            </div>
+            <a href="https://github.com/" class="project-link">GitHub查看 <i class="fab fa-github"></i></a>
+        </div>
+    </div>
+
+    <!-- 项目卡片 3: GSAP动画制作 -->
+    <div class="project-card">
+        <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1463171379579-3fdfb86d6285?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+                alt="GSAP动画">
+        </div>
+        <div class="project-content">
+            <h3>GSAP动画制作</h3>
+            <p>使用GSAP创建流畅的交互动画，增强用户体验与界面动态效果</p>
+            <div class="project-tags">
+                <span class="project-tag">GSAP</span>
+                <span class="project-tag">动画设计</span>
+                <span class="project-tag">用户体验</span>
+            </div>
+            <a href="https://github.com/" class="project-link">GitHub查看 <i class="fab fa-github"></i></a>
+        </div>
+    </div>
+
+    <!-- 项目卡片 4: 雷达图等可视化制作 -->
+    <div class="project-card">
+        <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+                alt="数据可视化">
+        </div>
+        <div class="project-content">
+            <h3>数据可视化制作</h3>
+            <p>开发雷达图等交互式数据可视化组件，直观展示技能与数据分析</p>
+            <div class="project-tags">
+                <span class="project-tag">Chart.js</span>
+                <span class="project-tag">数据可视化</span>
+                <span class="project-tag">SVG</span>
+            </div>
+            <a href="https://github.com/" class="project-link">GitHub查看 <i class="fab fa-github"></i></a>
+        </div>
+    </div>
+
+    <!-- 项目卡片 5: 人员信息批量统计 -->
+    <div class="project-card">
+        <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+                alt="人员信息统计">
+        </div>
+        <div class="project-content">
+            <h3>人员信息批量统计</h3>
+            <p>自动化信息处理系统，实现数据批量导入、校验与报表生成</p>
+            <div class="project-tags">
+                <span class="project-tag">Python</span>
+                <span class="project-tag">数据处理</span>
+                <span class="project-tag">Excel</span>
+            </div>
+            <a href="https://github.com/" class="project-link">GitHub查看 <i class="fab fa-github"></i></a>
+        </div>
+    </div>
+
+    <!-- 项目卡片 6: 哈希生成实验 -->
+    <div class="project-card">
+        <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+                alt="哈希生成">
+        </div>
+        <div class="project-content">
+            <h3>哈希生成实验</h3>
+            <p>研究不同哈希算法实现，开发安全高效的哈希生成工具</p>
+            <div class="project-tags">
+                <span class="project-tag">加密算法</span>
+                <span class="project-tag">Python</span>
+                <span class="project-tag">安全</span>
+            </div>
+            <a href="https://github.com/" class="project-link">GitHub查看 <i class="fab fa-github"></i></a>
+        </div>
+    </div>
+</div>
+        </div>
+    </section>
+
+    <!-- 时间轴部分 -->
+    <section id="timeline" class="timeline-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>大学历程</h2>
+                <p>从初入大学到大二的成长轨迹</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>初入大学</h3>
+                    <p>适应大学生活，加入计算机社团，学习基础编程概念，建立学习计划</p>
+                    </div>
+                    <div class="timeline-date">阶段 1</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Python与Go语言基础</h3>
+                    <p>系统学习Python语法和数据结构，掌握Go语言并发编程，完成多个小型项目实践</p>
+                    </div>
+                    <div class="timeline-date">阶段 2</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>视频拍摄与制作</h3>
+                    <p>学习摄影技巧、视频剪辑(Pr/Ae)，掌握剧本创作，参与校园短视频创作项目</p>
+                    </div>
+                    <div class="timeline-date">阶段 3</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                         <h3>前端技术学习</h3>
+                    <p>深入学习HTML5/CSS3/JavaScript，掌握响应式设计，完成个人网站开发</p>
+                    </div>
+                    <div class="timeline-date">阶段 4</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                         <h3>前后端结合实践</h3>
+                    <p>使用Node.js+Express构建后端服务，实现前后端数据交互，完成全栈项目开发</p>
+                    <div class="timeline-date">阶段 5</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <h3>这就是我的全部个人简介</h3>
+                <p>如果您对我的作品感兴趣或有任何问题，请随时联系我。我期待与您合作，创造令人惊叹的数字体验。</p>
+
+                <div class="social-links">
+                    <a href="https://github.com/"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="mailto:example@163.com"><i class="fas fa-envelope"></i></a>
+                </div>
+
+                <a href="mailto:contact@example.com" class="btn btn-primary">发送邮件</a>
+            </div>
+
+
+        </div>
+    </footer>
+
+    <script>
+        // 初始化GSAP插件
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function () {
+            // 初始设置
+            gsap.set('.hero h1, .hero p, .hero-buttons', { opacity: 0, y: 30 });
+            gsap.set('.project-card', { opacity: 0, y: 50 });
+            gsap.set('.timeline-item', { opacity: 0, x: -100 });
+            gsap.set('.timeline-item:nth-child(even)', { x: 100 });
+
+            // 主时间轴动画
+            const mainTl = gsap.timeline();
+
+            // Hero区域动画
+            mainTl.to('.hero h1', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power3.out"
+            })
+                .to('.hero p', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out"
+                }, "-=0.5")
+                .to('.hero-buttons', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    stagger: 0.2
+                }, "-=0.4");
+
+            // 项目卡片动画
+            gsap.utils.toArray('.project-card').forEach((card, index) => {
+                gsap.to(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 90%",
+                        end: "bottom 60%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: index * 0.1,
+                    ease: "back.out(1.4)"
+                });
+            });
+
+            // 时间轴动画
+            gsap.utils.toArray('.timeline-item').forEach((item, index) => {
+                gsap.to(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 90%",
+                        end: "bottom 60%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.8,
+                    delay: index * 0.2,
+                    ease: "power2.out"
+                });
+            });
+
+            // 背景元素动画
+            gsap.to('.bg-element-1', {
+                duration: 20,
+                x: "+=100",
+                y: "+=50",
+                rotation: 360,
+                repeat: -1,
+                ease: "none"
+            });
+
+            gsap.to('.bg-element-2', {
+                duration: 25,
+                x: "-=120",
+                y: "-=70",
+                rotation: -360,
+                repeat: -1,
+                ease: "none"
+            });
+
+            gsap.to('.bg-element-3', {
+                duration: 30,
+                x: "+=150",
+                y: "+=100",
+                rotation: 180,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+
+            // 头部导航滚动效果
+            ScrollTrigger.create({
+                start: "top -100",
+                end: 99999,
+                toggleClass: { className: "scrolled", targets: "header" },
+                onUpdate: (self) => {
+                    if (self.direction === -1) {
+                        gsap.to('header', { y: 0, duration: 0.3 });
+                    } else {
+                        gsap.to('header', { y: -100, duration: 0.3 });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
