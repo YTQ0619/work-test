@@ -1,3 +1,48 @@
+async function callQwenAPI(prompt) {
+  // 使用正确的API端点
+  const API_URL = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation';
+
+  // 清理API密钥（去掉多余空格和制表符）
+  const API_KEY = 'sk-240df64b5221491dba82836a8238bb50'.trim();
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        "model": "qwen-turbo", // 必须包含model字段
+        "input": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "你是一个帮助用户了解羊焘祺个人信息的AI助手。羊焘祺是三亚学院区块链工程专业的学生，擅长前端开发、后端开发、Python、Java、视频剪辑和设计。用户可能会询问他的教育背景、专业技能、项目经验或联系方式。"
+            },
+            {
+              "role": "user",
+              "content": prompt
+            }
+          ]
+        },
+        "parameters": {
+          "result_format": "message" // 添加必要参数
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || `API请求失败，状态码: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('API调用错误:', error);
+    throw error;
+  }
+}
 document.addEventListener('DOMContentLoaded', () => {
   // 欢迎动画
   const welcomeTl = gsap.timeline({
@@ -6,6 +51,112 @@ document.addEventListener('DOMContentLoaded', () => {
       duration: 1.2
     }
   });
+  const carousel = document.querySelector('.carousel');
+  const carouselItems = document.querySelectorAll('.carousel-item');
+  const prevBtn = document.querySelector('.carousel-control.prev');
+  const nextBtn = document.querySelector('.carousel-control.next');
+  const currentSlide = document.querySelector('.current-slide');
+  const totalSlides = document.querySelector('.total-slides');
+
+  let currentIndex = 0;
+  let autoPlayInterval;
+
+  // 设置总幻灯片数
+  totalSlides.textContent = carouselItems.length;
+
+  // 更新轮播图位置
+  function updateCarousel() {
+    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+    currentSlide.textContent = currentIndex + 1;
+    carouselItems.forEach((item, index) => {
+      if (index === currentIndex) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  // 下一张
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % carouselItems.length;
+    updateCarousel();
+  }
+
+  // 上一张
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
+    updateCarousel();
+  }
+
+  // 自动播放
+  function startAutoPlay() {
+    autoPlayInterval = setInterval(nextSlide, 8000); // 
+  }
+
+  // 停止自动播放
+  function stopAutoPlay() {
+    clearInterval(autoPlayInterval);
+  }
+
+  // 添加事件监听器
+  prevBtn.addEventListener('click', () => {
+    stopAutoPlay();
+    prevSlide();
+    startAutoPlay();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    stopAutoPlay();
+    nextSlide();
+    startAutoPlay();
+  });
+
+  // 触摸滑动支持
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  carousel.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  carousel.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const minSwipeDistance = 50; // 最小滑动距离
+
+    if (touchStartX - touchEndX > minSwipeDistance) {
+      // 向左滑动 - 下一张
+      stopAutoPlay();
+      nextSlide();
+      startAutoPlay();
+    } else if (touchEndX - touchStartX > minSwipeDistance) {
+      // 向右滑动 - 上一张
+      stopAutoPlay();
+      prevSlide();
+      startAutoPlay();
+    }
+  }
+
+  // 初始化轮播图
+  updateCarousel();
+  startAutoPlay();
+
+  // 当轮播图不在视图中时暂停自动播放
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        startAutoPlay();
+      } else {
+        stopAutoPlay();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(document.querySelector('.carousel-container'));
 
   welcomeTl
     .to('.spinner-container', {
@@ -92,16 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 导航链接点击事件
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = this.getAttribute('href');
-      smoothScroll(target);
-    });
-  });
 
-  // 回到顶部功能
+
+  
   const backToTopBtn = document.getElementById('back-to-top');
 
   window.addEventListener('scroll', () => {
@@ -112,12 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
+
 
   // 主题切换功能
   function applyTheme(theme) {
@@ -355,50 +494,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 调用阿里云通义千问API
-  // 修改API调用函数
-  async function callQwenAPI(prompt) {
-    // 使用正确的API端点
-    const API_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+  async function askAI() {
+    const input = document.getElementById('userInput').value;
+    const responseArea = document.getElementById('responseArea');
+    responseArea.innerHTML = "AI 正在思考...";
 
-    // 确保使用正确的API Key
-    const API_KEY = '	sk-240df64b5221491dba82836a8238bb50';
+    const apiKey = 'sk-240df64b5221491dba82836a8238bb50'; // 你的 DashScope API Key
 
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`
+    const response = await fetch('https://api.dashscope.cn/api/v1/services/aigc/text-generation/generation', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'X-DashScope-Api-Key': apiKey
+      },
+      body: JSON.stringify({
+        model: 'qwen-plus', // 可替换为 qwen-turbo、qwen-max 等
+        input: {
+          prompt: input
         },
-        body: JSON.stringify({
-          "model": "qwen-turbo",
-          "input": {
-            "messages": [
-              {
-                "role": "system",
-                "content": "你是一个帮助用户了解羊焘祺个人信息的AI助手。羊焘祺是三亚学院区块链工程专业的学生，擅长前端开发、后端开发、Python、Java、视频剪辑和设计。用户可能会询问他的教育背景、专业技能、项目经验或联系方式。"
-              },
-              {
-                "role": "user",
-                "content": prompt
-              }
-            ]
-          },
-          "parameters": {}
-        })
-      });
+        parameters: {
+          temperature: 0.7,
+          top_p: 0.8,
+          max_tokens: 512
+        }
+      })
+    });
 
-      if (!response.ok) {
-        throw new Error(`API请求失败，状态码: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('API调用错误:', error);
-      throw error;
+    if (!response.ok) {
+      responseArea.innerHTML = "请求失败，请检查网络或 API Key";
+      return;
     }
+
+    const data = await response.json();
+    const outputText = data.output.text;
+
+    responseArea.innerHTML = `<strong>AI 回答：</strong><br>${outputText}`;
   }
-  
+
 });
 

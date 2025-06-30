@@ -184,6 +184,16 @@ body {
   height: 100%;
   z-index: -1;
   background-color: rgba(13, 13, 13, 0.5);
+  pointer-events: none;
+}
+.particles-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none; /* 仅这个层允许穿透 */
 }
 
 .scroll-container {
@@ -340,7 +350,7 @@ body {
 
 /* 首页区域 */
 .hero {
-  background: url('hero-bg.jpg') no-repeat center/cover fixed;
+  /* background: url('./img/6.jpg') no-repeat center/cover fixed; */
   animation: pulse 15s infinite;
   display: flex;
   align-items: center;
@@ -1286,6 +1296,7 @@ body {
   white-space: nowrap;
 }
 
+
 /* 时间轴使用主题变量 */
 .timeline-card {
   background: var(--card-bg);
@@ -1558,3 +1569,205 @@ body {
     font-size: 1rem;
   }
 }
+
+/* 轮播图样式 --------------------------------------------------------------------------------------------------------------*/
+.carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 2rem auto;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.2);
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 500px;
+    
+}
+
+.carousel-item {
+    min-width: 100%;
+    min-height: 90%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.carousel-content {
+    background: rgba(13, 13, 13, 0.9);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 80%;
+    z-index: 20;
+}
+
+.skills-highlight {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.skill-tag {
+    background: var(--accent);
+    color: var(--bg-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-control:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+.carousel-control.prev {
+    left: 15px;
+    z-index: 10;
+    
+}
+
+.carousel-control.next {
+    right: 15px;
+    z-index: 10;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    z-index: 100;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .carousel-container {
+        width: 95%;
+        height: 250px;
+    }
+    
+    .carousel-content {
+        padding: 1rem;
+    }
+    
+    .carousel-control {
+        width: 35px;
+        height: 35px;
+    }
+}
+/* 在现有轮播图样式中添加以下代码 */
+.carousel-container {
+    perspective: 1200px; /* 添加透视效果 */
+    transform-style: preserve-3d;
+}
+
+.carousel {
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* 更平滑的过渡 */
+}
+
+.carousel-item {
+    transform: translateZ(0);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); /* 添加深度阴影 */
+    border-radius: 12px;
+    overflow: hidden;
+    transform-origin: center center;
+}
+
+/* 当前活动项突出显示 */
+.carousel-item.active {
+    transform: translateZ(50px) scale(1.05);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 
+                0 0 30px rgba(255, 215, 0, 0.4); /* 添加金色光晕 */
+    z-index: 10;
+}
+
+/* 非活动项稍微后退 */
+.carousel-item:not(.active) {
+    transform: translateZ(-30px) scale(0.95);
+    opacity: 0.8;
+    filter: brightness(0.8);
+}
+
+/* 3D边框效果 */
+.carousel-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+/* 内容3D效果 */
+.carousel-content {
+    transform: translateZ(30px);
+    background: rgba(13, 13, 13, 0);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 控制按钮3D效果 */
+.carousel-control {
+    transform: translateZ(50px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 指示器3D效果 */
+.carousel-indicators {
+    transform: translateZ(40px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
